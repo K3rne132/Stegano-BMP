@@ -101,12 +101,4 @@ int restore_bmp_from_bmp(FILE** bmp, FILE** output) {
 	return 0;
 }
 
-int hide_plain_into_bmp(const char** plain_text, FILE** bmp) {
-	return 0;
-}
-
-int restore_plain_from_bmp(FILE** bmp) {
-	return 0;
-}
-
 #endif
