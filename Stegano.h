@@ -19,25 +19,27 @@ int hide_bmp_into_bmp(FILE** from, FILE** to, FILE** output) {
 		return 11;
 	if (*to == NULL)
 		return 12;
+	if (*output == NULL)
+		return 13;
 	BITMAPFILEHEADER h_from = get_bmp_header(from);
 	BITMAPFILEHEADER h_to   = get_bmp_header(to);
 
 	const unsigned long bytes_required  = h_from.bfSize * 8;
 	const unsigned long bytes_available = h_to.bfSize - h_to.bfOffBits;
 	if (bytes_required > bytes_available)
-		return 13;
+		return 14;
 
 	fseek(*from, 0, SEEK_SET);
 	unsigned char* buffer_to_write = (unsigned char*)malloc(h_from.bfSize);
 	if (buffer_to_write == NULL)
-		return 14;
+		return 15;
 	fread(buffer_to_write, 1, h_from.bfSize, *from);
 
 	fseek(*to, 0, SEEK_SET);
 	unsigned char* buffer_output = (unsigned char*)malloc(h_to.bfSize);
 	if (buffer_output == NULL) {
 		free(buffer_to_write);
-		return 15;
+		return 16;
 	}
 	fread(buffer_output, 1, h_to.bfSize, *to);
 
@@ -58,18 +60,22 @@ int hide_bmp_into_bmp(FILE** from, FILE** to, FILE** output) {
 }
 
 int restore_bmp_from_bmp(FILE** bmp, FILE** output) {
+	if (*bmp == NULL)
+		return 21;
+	if (*output == NULL)
+		return 22;
 	BITMAPFILEHEADER h_bmp = get_bmp_header(bmp);
 
 	unsigned char* buffer_read = (unsigned char*)malloc(h_bmp.bfSize);
 	if (buffer_read == NULL)
-		return 21;
+		return 23;
 	fseek(*bmp, h_bmp.bfOffBits, SEEK_SET);
 	fread(buffer_read, 1, h_bmp.bfSize - h_bmp.bfOffBits, *bmp);
 
 	unsigned char* buffer_to_write = (unsigned char*)calloc(h_bmp.bfSize, 1);
 	if (buffer_to_write == NULL) {
 		free(buffer_read);
-		return 22;
+		return 24;
 	}
 	
 	const unsigned int size_of_header = sizeof(BITMAPFILEHEADER);
